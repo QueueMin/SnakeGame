@@ -12,6 +12,7 @@
 #define GATEa 7 // GATEa는 보라? 분홍?
 #define GATEb 8 // GATEb는 GATEa와 같은 색으로
 
+
 void displayStage(int stage[][MSIZE]){
 
 

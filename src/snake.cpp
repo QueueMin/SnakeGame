@@ -11,6 +11,8 @@
 #define GATEa 7
 #define GATEb 8
 
+#define MSIZE 21
+
 #include <deque>
 #include <utility>
 

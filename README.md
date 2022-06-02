@@ -1,5 +1,12 @@
 # 2022-1 C++프로그래밍 팀 프로젝트
 ## SnakeGame
+
+### 3분반 14조
+#### 20191555 김규민
+#### 20203041 김성호
+#### 20203058 노혜원
+
+---
 * 구현하고자 하는 UI
 
 ![image](https://user-images.githubusercontent.com/55120768/171079283-c9e52a0f-e261-4c2e-be73-d7e1fea0d921.png)

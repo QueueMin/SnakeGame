@@ -16,9 +16,14 @@
 #include <deque>
 #include <utility>
 
+#define UP 0
+#define RIGHT 1
+#define DOWN 2
+#define LEFT 3
+
 // snake head의 위치가 움직일 때 도움을 주는 배열 dy,dx.
-int dy[4] = {0, 0, 1, -1};  // 우, 좌, 상, 하
-int dx[4] = {1, -1, 0, 0};  // 
+int dy[4] = {-1, 0, 1, 0};  // 상, 우, 하, 좌
+int dx[4] = {0, 1, 0, -1};  // 이렇게 하면 시계, 반시계, 반대쪽을 쉽게 구현가능
 
 // snake의 필요한 정보를 저장하는 class snake
 class snake{
@@ -120,6 +125,57 @@ class snake{
             return stage[headY+dy[headVector]][headX+dx[headVector]];
         }
 
+        void moveHead(int stage[][MSIZE]){
+            // 뱀이 한 칸 길어져 앞으로 가는 함수
+            // 단, deque와 stage에 표시를 할 뿐 길이는 손대지 않는다.
+
+            // 원래 머리였던 칸은 몸으로 표시한다.
+            stage[headY][headX] = SBODY;
+
+            // head의 좌표가 바라보는 방향 headVector를 기준으로 한칸 움직인다.
+            // 이후 바뀐 좌표를 바탕으로 stage에 새 머리를 표시한다.
+            headY = headY+dy[headVector];
+            headX = headX+dx[headVector];
+            stage[headY][headX] = SHEAD;
+
+            // 이후 bodyDeque에 새 머리의 좌표를 추가
+            bodyDeque.push_front(std::make_pair(headY, headX));
+        }
+        
+        void gateHead(int stage[][MSIZE], int ny, int nx){
+            // 뱀이 gate를 탔을 때 head의 위치가 바뀌는 함수
+            // 마찬가지로 길이는 손대지 않는다.
+            // 도착지 게이트의 위치 ny와 nx를 추가로 받는다.
+
+            // 원래 머리였던 칸은 몸으로 표시한다.
+            stage[headY][headX] = SBODY;
+
+            // 도착 게이트를 바탕으로 머리의 좌표를 정한다.
+            // 이후 바뀐 좌표를 바탕으로 stage에 새 머리를 표시한다.
+            headY = ny + dy[headVector];
+            headX = nx + dx[headVector];
+            stage[headY][headX] = SHEAD;
+
+            // 이후 bodyDeque에 새 머리의 좌표를 추가
+            bodyDeque.push_front(std::make_pair(headY, headX));
+        }
+
+        void moveTail(int stage[][MSIZE]){
+            // 뱀의 꼬리 한 칸이 줄어드는 함수
+            // 위의 moveHead와 함께 사용하면, 이동 방향으로 뱀이 움직인 효과를 준다
+            
+            // 현재의 꼬리가 있는 좌표 저장
+            int tailY = bodyDeque.back().first;
+            int tailX = bodyDeque.back().second;
+            
+            //꼬리가 있던 곳은 빈칸으로 변한다.
+            stage[tailY][tailX] = EMPTY;
+            
+            // deque에서 꼬리를 제거한다. 결과적으로, 꼬리가 움직이게 된 셈이다.
+            bodyDeque.pop_back();
+        }
+
+
         // 다음 칸에 무엇이 있을 지에 따라 snake의 상태를 조정하는 함수
         // 빈칸이면 좌표만 바뀐다.
         // poison 혹은 growth면, 길이도 바뀐다.
@@ -128,8 +184,94 @@ class snake{
         // 남은 경우는 벽, 자신의 몸 뿐이다.(head가 head와 충돌하는 경우는 없으므로)
         // 벽과 몸이면, life를 DEAD로 바꾼다. 
         void changeOnNextStep(int stage[][MSIZE]){
-        }
+            int next = collideWith(stage);
+            
+            if (next == EMPTY){
+                // 다음칸이 빈 칸이면
+                // 머리를 한칸, 꼬리를 한칸 움직인다.
+                moveHead(stage);
+                moveTail(stage);
+                // 이전 꼬리의 좌표를 각각 저장
+                 
+            } else if (next == POISON){
+                // 다음 칸이 독 아이템이면
+                // 일단 길이가 1칸 줄어든다
+                takePoison();
+                // 만약 길이가 3보다 짧으면, 죽는다.
+                if (bodyLen < 3) life = DEAD;
+                // 머리를 한칸, 꼬리를 두칸 움직인다.(그래야 한칸 줄어든다.)
+                moveHead(stage);
+                moveTail(stage);
+                moveTail(stage);
+            } else if (next == GROWTH){
+                // 다음 칸이 성장 아이템이면
+                // 일단 길이가 1칸 늘어난다.
+                takeGrowth();
+                // 머리만 한칸 움직이면 된다.(그래야 한 칸 길어지게 된다.)
+                moveHead(stage);
+            } else if ((next == GATEa)||(next == GATEb)){
+                // 찾아야 하는 GATE를 정한다(a인지 b인지)
+                int findingGate = GATEb ? (next == GATEa) : GATEa;
 
+                // stage에서 도착지인 findingGate를 찾는다
+                // 도착지의 좌표는 ny, nx라 하자.
+                int ny, nx;
+                int flag = 0;
+                for (int y = 0; y < MSIZE; y++){
+                    if (flag) break;
+                    for (int x = 0; x < MSIZE; x++){
+                        if (stage[y][x] = findingGate){
+                            ny = y; nx = x;
+                            break;
+                        }
+                    }
+                }
+                // 탐색 완료
+                // gate가 가장자리에 있다면, 즉 ny와 nx중 하나라도 0이거나 MSIZE라면
+                if (((ny == 0)||(ny == MSIZE-1))||((nx == 0)||(nx == MSIZE-1))){
+                    // 왼쪽에서 오른쪽, 위에서 아래...등과 같이 안쪽으로 진행한다.
+                    // 진행방향은 headVector를 변경하여 변경된다.
+                    if (ny == 0) {
+                        // 도착지점이 윗 가장자리면, headVector는 아래로
+                        headVector = DOWN;
+                        // 이후 머리를 gate 이동 시키고, 꼬리를 한칸 움직인다.
+                        gateHead(stage, ny, nx);
+                        moveTail(stage);
+                    }
+                } else {
+                    // gate가 가장자리에 있는게 아니라면,
+                    // 원래 방향, 시계, 역시계, 반대 순으로 시도
+                    if (stage[ny+dy[headVector]][nx+dx[headVector]] == EMPTY){
+                        // 원래 방향이 가능하다면,
+                        // 벡터는 그대로 두고 이동.
+                        gateHead(stage, ny, nx);
+                        moveTail(stage);
+                    }else if (stage[ny+dy[(headVector+1)%4]][nx+dx[(headVector+1)%4]] == EMPTY){
+                        // 시계방향이 가능하다면,
+                        // 벡터를 시계방향으로 돌리고 이동
+                        headVector = (headVector+1)%4;
+                        gateHead(stage, ny, nx);
+                        moveTail(stage);
+                    }else if (stage[ny+dy[(headVector+3)%4]][nx+dx[(headVector+3)%4]] == EMPTY){
+                        // 반시계가 가능하다면,
+                        // 벡터를 반시계방향으로 돌리고 이동
+                        headVector = (headVector+3)%4;
+                        gateHead(stage, ny, nx);
+                        moveTail(stage);
+                    }else{
+                        // 남은건 원래 진행방향의 반대방향뿐이다.
+                        headVector = (headVector+2)%4;
+                        gateHead(stage, ny, nx);
+                        moveTail(stage);
+                    }
+                }
+            } else {
+                // 이외의 경우,
+                // 몸에 부딪히거나, 벽에 부딪히거나 둘 중 하나이다.
+                // 딱히 아무것도 할 필요없고, 그냥 뱀이 죽으면 끝이다.
+                life = DEAD;
+            }
+        }
 
 
 };

@@ -34,7 +34,7 @@
 ![image](https://user-images.githubusercontent.com/55120768/171081375-136d5b33-bdaf-4ae3-9719-84e3be3efa7a.png)
 * Gate는 두 개가 한 쌍이며, 동시에 존재할 수 있는 Gate의 개수는 최대 1개이다.
 * 한 쌍의 Gate는 서로 다른 곳에 존재해야한다.
-* 임의의 벽에서 Wall에서 나타난다.
+* 임의의 Wall에서 나타난다.
 * Gate에 Snake가 진입하면, 다른 Gate로 진출한다.
 * Gate에 Snake가 진입중인 경우, Gate는 사라지지 않으며 다른 위치에서 Gate가 나타나지 않는다.
 ---

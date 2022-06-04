@@ -26,7 +26,7 @@ int dy[4] = {-1, 0, 1, 0};  // 상, 우, 하, 좌
 int dx[4] = {0, 1, 0, -1};  // 이렇게 하면 시계, 반시계, 반대쪽을 쉽게 구현가능
 
 // snake의 필요한 정보를 저장하는 class snake
-class snake{
+class Snake{
     private:
         int headVector = 1; // 머리가 향하는 방향. 항상 왼쪽을 바라보고 시작한다
         int bodyLen = 3; // 몸의 길이
@@ -40,20 +40,8 @@ class snake{
         std::deque<std::pair<int, int>> bodyDeque;
     
     public:
-        void makeBodyDeque(int stage[][MSIZE]);
-        void findHead(int stage[][MSIZE]);
-        // 생성자
-        snake::snake(int stage[][MSIZE]){
-            // y 좌표와 x 좌표를 인자로 받아 생성.
-
-            life = ALIVE;
-
-            // 저장된 좌표를 기반으로 headY, headX값을 지정. 
-            findHead(stage);
-            makeBodyDeque();
-        }
-
-
+        // void makeBodyDeque(int stage[][MSIZE]);
+        // void findHead(int stage[][MSIZE]);
         void findHead(int stage[][MSIZE]){
             for (int i = 0; i < MSIZE; i++){
                 for (int j = 0; j < MSIZE; j++){
@@ -66,12 +54,21 @@ class snake{
             }
         }
 
-
         void makeBodyDeque(){
             bodyDeque.push_back(std::make_pair(headY, headX));
             bodyDeque.push_back(std::make_pair(headY, headX+1));
             bodyDeque.push_back(std::make_pair(headY, headX+2));
         }
+        // 생성자
+        Snake(int stage[][MSIZE]){
+            life = ALIVE;
+
+            // 저장된 좌표를 기반으로 headY, headX값을 지정. 
+            findHead(stage);
+            makeBodyDeque();
+        }
+
+
 
         // headVector값을 return
         int getHeadVector(){
@@ -211,7 +208,15 @@ class snake{
                 moveHead(stage);
             } else if ((next == GATEa)||(next == GATEb)){
                 // 찾아야 하는 GATE를 정한다(a인지 b인지)
-                int findingGate = GATEb ? (next == GATEa) : GATEa;
+                int findingGate;
+                if (next == GATEa){
+                    findingGate = GATEb;
+                }else{
+                    findingGate = GATEa;
+                }
+
+                // // for debug
+                // std::cout << "going to " << findingGate << "\n";
 
                 // stage에서 도착지인 findingGate를 찾는다
                 // 도착지의 좌표는 ny, nx라 하자.
@@ -220,12 +225,16 @@ class snake{
                 for (int y = 0; y < MSIZE; y++){
                     if (flag) break;
                     for (int x = 0; x < MSIZE; x++){
-                        if (stage[y][x] = findingGate){
+                        if (stage[y][x] == findingGate){
                             ny = y; nx = x;
                             break;
                         }
                     }
                 }
+                
+                // // for debug
+                // std::cout << "ny : " << ny << "  nx : " << nx << "\n";
+                
                 // 탐색 완료
                 // gate가 가장자리에 있다면, 즉 ny와 nx중 하나라도 0이거나 MSIZE라면
                 if (((ny == 0)||(ny == MSIZE-1))||((nx == 0)||(nx == MSIZE-1))){
@@ -237,7 +246,23 @@ class snake{
                         // 이후 머리를 gate 이동 시키고, 꼬리를 한칸 움직인다.
                         gateHead(stage, ny, nx);
                         moveTail(stage);
+                    } else if (ny == MSIZE - 1){
+                        // 도착지점이 아래 가장자리면, headVector는 위로
+                        headVector = UP;
+                        gateHead(stage, ny, nx);
+                        moveTail(stage);
+                    } else if (nx == 0){
+                        // 도착지점이 왼쪽 가장자리면, headVector는 오른쪽으로
+                        headVector = RIGHT;
+                        gateHead(stage, ny, nx);
+                        moveTail(stage);
+                    }else if (nx == MSIZE - 1){
+                        // 도착지점이 오른쪽 가장자리면, headVector는 왼쪽으로
+                        headVector = LEFT;
+                        gateHead(stage, ny, nx);
+                        moveTail(stage);
                     }
+
                 } else {
                     // gate가 가장자리에 있는게 아니라면,
                     // 원래 방향, 시계, 역시계, 반대 순으로 시도
@@ -270,6 +295,20 @@ class snake{
                 // 몸에 부딪히거나, 벽에 부딪히거나 둘 중 하나이다.
                 // 딱히 아무것도 할 필요없고, 그냥 뱀이 죽으면 끝이다.
                 life = DEAD;
+            }
+        }
+
+        void changeHeadVector(char key){
+            if (key == 'a'){
+                headVector = LEFT;
+            }else if (key == 'w'){
+                headVector = UP;
+            }else if (key == 'd'){
+                headVector = RIGHT;
+            }else if (key == 's'){
+                headVector = DOWN;
+            }else{
+                return;
             }
         }
 

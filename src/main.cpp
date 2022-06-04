@@ -2,10 +2,12 @@
 #include "makeStage.cpp"
 #include "snake.cpp"
 
+#include "displayOnTerminal.cpp" // for debug
+
 
 
 int main(){
-    initscr();
+    // initscr();
 
     int stageLoaded[MSIZE][MSIZE];
     
@@ -20,25 +22,38 @@ int main(){
     //     }
     //     std::cout << "\n";
     // }
-    char key;
-    char userName[8];
 
-    keypad(stdscr, TRUE);
-    curs_set(0);
-    noecho();
+    // /* for debug
+    std::string a = "211111111111111111112100000000000000000001100000000000000500001800000000000000000007100000000000000000001100000000000000000001100000000000000000001100000000000000000001100000000000000000001100000000505050500001100000003440000000001100000000000000000001100000000000000000001100000000000000000001100000000066600000001100000000000000000001100000000000000000001100000000000000000001100000000000000000001100000000000000000001211111111111111111112";
+    for (int i = 0; i < MSIZE; i++){
+        for (int j = 0; j < MSIZE; j++){
+            char t = a[i*MSIZE+j];
+            stageLoaded[i][j] =  t - '0';
+        }
+    }
+    while (true){
+        Snake s = Snake(stageLoaded);
+        char key;
 
-    printw("user name: ");
-    scanw("%s", userName);
+        // snake 내의 method들이 작동해야하는 순서는
+        // 오직 다음 순간만을 기준으로 생각하여 작동시킨다.
+        // 뱀이 살아있는 동안,
+        // 1. 키입력을 바탕으로 머리의 방향을 바꾼다. 입력 없으면 유지.
+        // 2. 현재 머리의 방향을 기준으로 도착한 다음칸에 도착 시 일어날 변화 반영
+        while (!s.isDead()){
+            displayOnTerminal(stageLoaded);
+            std::cin >> key;
+            std::cout << "\n";
 
-    printw("%s", userName);
-    refresh();
+            s.changeHeadVector(key);
+            s.changeOnNextStep(stageLoaded);
+        }
+        break;
+    }
 
-    getch();
-    clear();
-    refresh();
-    
-    getch();
-    endwin();
+    std::cout << "Game Over\n";
+    getchar();
+    // for debug end
 
     return 0;
 }

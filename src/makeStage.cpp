@@ -2,8 +2,8 @@
 #include <fstream>
 #include<string>
 #define MSIZE 21
-using namespace std;
 
+using namespace std;
 
 void makeStage(int stageNum, int stage[][MSIZE]) {
     string s = to_string(stageNum);

@@ -7,7 +7,6 @@
 
 
 int main(){
-    // initscr();
 
     int stageLoaded[MSIZE][MSIZE];
     
@@ -35,6 +34,7 @@ int main(){
     // // for debug end
 
     // for check snake move
+    // initscr();
     while (true){
         Snake s = Snake(stageLoaded);
         char key;

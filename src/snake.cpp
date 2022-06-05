@@ -1,25 +1,6 @@
-# define DEAD 0
-# define ALIVE 1
-
-#define EMPTY 0
-#define WALL 1
-#define IWALL 2
-#define SHEAD 3
-#define SBODY 4
-#define GROWTH 5
-#define POISON 6
-#define GATEa 7
-#define GATEb 8
-
-#define MSIZE 21
-
 #include <deque>
 #include <utility>
-
-#define UP 0
-#define RIGHT 1
-#define DOWN 2
-#define LEFT 3
+#include "elements.cpp"
 
 // snake head의 위치가 움직일 때 도움을 주는 배열 dy,dx.
 int dy[4] = {-1, 0, 1, 0};  // 상, 우, 하, 좌

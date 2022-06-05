@@ -1,19 +1,18 @@
 #include <iostream>
 #include <fstream>
-#include<string>
-#define MSIZE 21
-using namespace std;
+#include <string>
+#include "elements.cpp"
 
 
 void makeStage(int stageNum, int stage[][MSIZE]) {
-    string s = to_string(stageNum);
-    string t = "stage" + s + ".txt";
-    int row = sizeof(stage) / sizeof(stage[0]);
-    ifstream inputfile(t);
+    std::string s = std::to_string(stageNum);
+    std::string t = "stage" + s + ".txt";
+    std::ifstream inputfile(t);
 
     if (!inputfile.is_open())
-        cout << "Error opening file";
+        std::cout << "Error opening file";
 
+    std::cout << t << "\n";
     for (int r = 0; r < MSIZE; r++)
     {
         for (int c = 0; c < MSIZE; c++)
@@ -22,14 +21,17 @@ void makeStage(int stageNum, int stage[][MSIZE]) {
         }
     }
 
-    for (int r = 0; r < MSIZE; r++)
-    {
-        for (int c = 0; c < MSIZE; c++)
-        {
-            cout << stage[r][c] << "\t";
-        }
-        cout << endl;
-    }
+
+    // // for debug
+    // for (int r = 0; r < MSIZE; r++)
+    // {
+    //     for (int c = 0; c < MSIZE; c++)
+    //     {
+    //         std::cout << stage[r][c] << "\t";
+    //     }
+    //     std::cout << std::endl;
+    // }
+    // // for debug end
     
 }
 

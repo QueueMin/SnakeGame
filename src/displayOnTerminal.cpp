@@ -5,12 +5,12 @@
 #define EMPTY 0  // 빈 곳은 검게
 #define WALL 1  // 벽은 하얗게
 #define IWALL 2  // I벽도 하얗게
-#define SHEAD 3 // 뱀머리는 주황
-#define SBODY 4 // 몸은 노랑
-#define GROWTH 5 // 성장약은 빨강
-#define POISON 6 // 독은 초록
-#define GATEa 7 // GATEa는 보라? 분홍?
-#define GATEb 8 // GATEb는 GATEa와 같은 색으로
+#define SHEAD 3 // 뱀머리는 하늘
+#define SBODY 4 // 몸은 파랑
+#define GROWTH 5 // 성장약은 초록
+#define POISON 6 // 독은 빨강
+#define GATEa 7 // GATEa는 자홍
+#define GATEb 8 // GATEb도 자홍
 
 
 void displayOnTerminal(int stage[][MSIZE]){

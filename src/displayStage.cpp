@@ -24,11 +24,13 @@ void displayStage(int stage[][MSIZE]){
     init_pair(6,COLOR_RED,COLOR_RED);
     init_pair(7,COLOR_MAGENTA,COLOR_MAGENTA);
     init_pair(8,COLOR_MAGENTA,COLOR_MAGENTA);
+
     for (int i = 0; i < MSIZE; i++){
         for (int j = 0; j < MSIZE; j++){
             attron(COLOR_PAIR(stage[i][j]));
-            printw("  ");
+            printw(" ");
         }
+        printw("\n");
     }
     refresh();
 }

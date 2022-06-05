@@ -38,5 +38,5 @@ void makeStage(int stageNum, int stage[][MSIZE]) {
 }
 
     
-}
+
 

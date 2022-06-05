@@ -3,8 +3,6 @@
 #include <string>
 #include "elements.cpp"
 
-using namespace std;
-
 void makeStage(int stageNum, int stage[][MSIZE]) {
     std::string s = std::to_string(stageNum);
     std::string t = "stage" + s + ".txt";

@@ -1,14 +1,10 @@
 #include <iostream>
 #include <fstream>
-
-#define MSIZE 21
-
-void makeStage(int stageNum, int stage[][MSIZE]){
-    #include<iostream>
-#include<fstream>
 #include<string>
 #define MSIZE 21
 using namespace std;
+
+
 void makeStage(int stageNum, int stage[][MSIZE]) {
     string s = to_string(stageNum);
     string t = "stage" + s + ".txt";

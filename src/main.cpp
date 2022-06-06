@@ -1,7 +1,9 @@
 #include <ncurses.h>
+#include <time.h>
 #include "makeStage.cpp"
 #include "snake.cpp"
 #include "displayStage.cpp"
+
 #include "displayOnTerminal.cpp" // for debug
 
 
@@ -34,7 +36,9 @@ int main(){
     // // for debug end
 
     // for check snake move
-    // initscr();
+    resize_term(30, 90);
+    initscr();
+
     while (true){
         Snake s = Snake(stageLoaded);
         char key;
@@ -45,8 +49,11 @@ int main(){
         // 1. 키입력을 바탕으로 머리의 방향을 바꾼다. 입력 없으면 유지.
         // 2. 현재 머리의 방향을 기준으로 도착한 다음칸에 도착 시 일어날 변화 반영
         while (!s.isDead()){
-            displayOnTerminal(stageLoaded);
-            // displayStage(stageLoaded);
+            // displayOnTerminal(stageLoaded);
+            // clear();
+            move(0,0);
+            displayStage(stageLoaded);
+            
             std::cin >> key;
             std::cout << "\n";
 
@@ -55,10 +62,9 @@ int main(){
         }
         break;
     }
-
+    endwin();
     std::cout << "Game Over\n";
     getchar();
-    // endwin();
     // for check snake move end
 
     return 0;

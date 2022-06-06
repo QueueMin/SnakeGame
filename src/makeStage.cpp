@@ -11,7 +11,7 @@ void makeStage(int stageNum, int stage[][MSIZE]) {
     if (!inputfile.is_open())
         std::cout << "Error opening file";
 
-    std::cout << t << "\n";
+    // std::cout << t << "\n";
     for (int r = 0; r < MSIZE; r++)
     {
         for (int c = 0; c < MSIZE; c++)

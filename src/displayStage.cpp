@@ -28,7 +28,8 @@ void displayStage(int stage[][MSIZE]){
     for (int i = 0; i < MSIZE; i++){
         for (int j = 0; j < MSIZE; j++){
             attron(COLOR_PAIR(stage[i][j]));
-            printw(" ");
+            printw("  ");
+            attroff(COLOR_PAIR(stage[i][j]));
         }
         printw("\n");
     }

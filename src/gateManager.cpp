@@ -51,7 +51,7 @@ class gateManager{
             tick = l;
         }
 
-        void onNextStep(int stage[][MSIZE]){
+        void changeOnNextStep(int stage[][MSIZE]){
             tick--;
             if (tick < 0){
                 stage[gA_Y][gA_X] = WALL;

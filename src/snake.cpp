@@ -2,6 +2,7 @@
 #include <utility>
 #include "elements.cpp"
 #include "gateManager.cpp"
+#include "itemManager.cpp"
 
 // snake head의 위치가 움직일 때 도움을 주는 배열 dy,dx.
 int dy[4] = {-1, 0, 1, 0};  // 상, 우, 하, 좌
@@ -24,7 +25,9 @@ class Snake{
         int gateScore = 0;
         int growthScore = 0;
         int poisonScore = 0;
+        
         int lenRecordScore = 3;
+        int timeScore = 0;
 
     public:
         // void makeBodyDeque(int stage[][MSIZE]);
@@ -109,6 +112,26 @@ class Snake{
             }
         }
 
+        int getGateScore(){
+            return gateScore;
+        }
+
+        int getGrowthScore(){
+            return growthScore;
+        }
+
+        int getPoisonScore(){
+            return poisonScore;
+        }
+
+        int getLenRecordScore(){
+            return lenRecordScore;
+        }
+
+        int getTimeScore(){
+            return timeScore;
+        }
+
         // 현재 headY, headX, headVector값을 바탕으로,
         // 다음 칸에 갔을 때 무엇과 부딪히는지 return해주는 함수
         int collideWith(int stage[][MSIZE]){
@@ -179,7 +202,8 @@ class Snake{
         // gateB면, gateA를 기반으로 이동한다.  -->  Gate를 기반으로 좌표와 이동방향 지정해주는 함수 필요.
         // 남은 경우는 벽, 자신의 몸 뿐이다.(head가 head와 충돌하는 경우는 없으므로)
         // 벽과 몸이면, life를 DEAD로 바꾼다. 
-        void changeOnNextStep(int stage[][MSIZE], gateManager& gm){
+        void changeOnNextStep(int stage[][MSIZE], gateManager& gm, itemManager& im){
+            timeScore++;
             int next = collideWith(stage);
             
             if (next == EMPTY){
@@ -213,10 +237,6 @@ class Snake{
                 }else{
                     findingGate = GATEa;
                 }
-
-                // // for debug
-                // std::cout << "going to " << findingGate << "\n";
-
                 // stage에서 도착지인 findingGate를 찾는다
                 // 도착지의 좌표는 ny, nx라 하자.
                 int ny, nx;

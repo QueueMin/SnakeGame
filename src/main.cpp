@@ -5,6 +5,8 @@
 #include "makeStage.cpp"
 #include "snake.cpp"
 #include "displayStage.cpp"
+#include "drawRealScore.cpp"
+
 
 #include "displayOnTerminal.cpp" // for debug
 
@@ -15,6 +17,18 @@ int main(){
     srand(time(NULL));
     initscr();
     resize_term(30, 90);
+    WINDOW* realScore;
+    realScore = newwin(12, 30, 1, 48);
+    wbkgd(realScore, 2);
+    wrefresh(realScore);
+
+    WINDOW* goalScore;
+    init_pair(3, COLOR_YELLOW, COLOR_BLUE);
+    goalScore = newwin(12, 30, 11, 48);
+    wbkgd(goalScore, 3);
+    wrefresh(goalScore);
+
+    refresh();
     
     noecho();
     curs_set(0);
@@ -27,6 +41,8 @@ int main(){
     while (stageNum <= 4){
         Snake s = Snake(stageLoaded);
         gateManager gm = gateManager(stageLoaded);
+        itemManager im = itemManager(stageLoaded);
+        scoreBoard sc = scoreBoard(10, 10, 10, 10, 10);
         char key;
 
         // snake 내의 method들이 작동해야하는 순서는
@@ -41,13 +57,21 @@ int main(){
             key = getch();
             
             //logics
+
             s.changeHeadVector(key);
-            s.changeOnNextStep(stageLoaded, gm);
-            gm.onNextStep(stageLoaded);
-            
+            s.changeOnNextStep(stageLoaded, gm, im);
+
+            gm.changeOnNextStep(stageLoaded);
+
+            im.changeOnNextStep(stageLoaded);
+
+            sc.updateAll(s.getGateScore(), s.getGrowthScore(), s.getPoisonScore(), s.getBodyLen(), s.getLenRecordScore(), s.getTimeScore());
+
+
             //display
             move(0,0);
             displayStage(stageLoaded);
+            drawRealScore(realScore, sc);
         }
         getch();
         if (flag){

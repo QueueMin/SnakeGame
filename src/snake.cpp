@@ -1,6 +1,7 @@
 #include <deque>
 #include <utility>
 #include "elements.cpp"
+#include "gateManager.cpp"
 
 // snake head의 위치가 움직일 때 도움을 주는 배열 dy,dx.
 int dy[4] = {-1, 0, 1, 0};  // 상, 우, 하, 좌
@@ -9,7 +10,7 @@ int dx[4] = {0, 1, 0, -1};  // 이렇게 하면 시계, 반시계, 반대쪽을 
 // snake의 필요한 정보를 저장하는 class snake
 class Snake{
     private:
-        int headVector = 1; // 머리가 향하는 방향. 항상 왼쪽을 바라보고 시작한다
+        int headVector = LEFT; // 머리가 향하는 방향. 항상 왼쪽을 바라보고 시작한다
         int bodyLen = 3; // 몸의 길이
 
         int life; // snake의 생존 유무
@@ -120,10 +121,13 @@ class Snake{
             bodyDeque.push_front(std::make_pair(headY, headX));
         }
         
-        void gateHead(int stage[][MSIZE], int ny, int nx){
+        void gateHead(int stage[][MSIZE], int ny, int nx, gateManager gm){
             // 뱀이 gate를 탔을 때 head의 위치가 바뀌는 함수
             // 마찬가지로 길이는 손대지 않는다.
             // 도착지 게이트의 위치 ny와 nx를 추가로 받는다.
+            
+            //gateManager 객체의 남은 수명을 뱀의 길이만큼 연장시킨다.
+            gm.setTickAsLen(*this);
 
             // 원래 머리였던 칸은 몸으로 표시한다.
             stage[headY][headX] = SBODY;
@@ -161,7 +165,7 @@ class Snake{
         // gateB면, gateA를 기반으로 이동한다.  -->  Gate를 기반으로 좌표와 이동방향 지정해주는 함수 필요.
         // 남은 경우는 벽, 자신의 몸 뿐이다.(head가 head와 충돌하는 경우는 없으므로)
         // 벽과 몸이면, life를 DEAD로 바꾼다. 
-        void changeOnNextStep(int stage[][MSIZE]){
+        void changeOnNextStep(int stage[][MSIZE], gateManager gm){
             int next = collideWith(stage);
             
             if (next == EMPTY){
@@ -213,9 +217,6 @@ class Snake{
                     }
                 }
                 
-                // // for debug
-                // std::cout << "ny : " << ny << "  nx : " << nx << "\n";
-                
                 // 탐색 완료
                 // gate가 가장자리에 있다면, 즉 ny와 nx중 하나라도 0이거나 MSIZE라면
                 if (((ny == 0)||(ny == MSIZE-1))||((nx == 0)||(nx == MSIZE-1))){
@@ -225,22 +226,22 @@ class Snake{
                         // 도착지점이 윗 가장자리면, headVector는 아래로
                         headVector = DOWN;
                         // 이후 머리를 gate 이동 시키고, 꼬리를 한칸 움직인다.
-                        gateHead(stage, ny, nx);
+                        gateHead(stage, ny, nx, gm);
                         moveTail(stage);
                     } else if (ny == MSIZE - 1){
                         // 도착지점이 아래 가장자리면, headVector는 위로
                         headVector = UP;
-                        gateHead(stage, ny, nx);
+                        gateHead(stage, ny, nx, gm);
                         moveTail(stage);
                     } else if (nx == 0){
                         // 도착지점이 왼쪽 가장자리면, headVector는 오른쪽으로
                         headVector = RIGHT;
-                        gateHead(stage, ny, nx);
+                        gateHead(stage, ny, nx, gm);
                         moveTail(stage);
                     }else if (nx == MSIZE - 1){
                         // 도착지점이 오른쪽 가장자리면, headVector는 왼쪽으로
                         headVector = LEFT;
-                        gateHead(stage, ny, nx);
+                        gateHead(stage, ny, nx, gm);
                         moveTail(stage);
                     }
 
@@ -250,24 +251,24 @@ class Snake{
                     if (stage[ny+dy[headVector]][nx+dx[headVector]] == EMPTY){
                         // 원래 방향이 가능하다면,
                         // 벡터는 그대로 두고 이동.
-                        gateHead(stage, ny, nx);
+                        gateHead(stage, ny, nx, gm);
                         moveTail(stage);
                     }else if (stage[ny+dy[(headVector+1)%4]][nx+dx[(headVector+1)%4]] == EMPTY){
                         // 시계방향이 가능하다면,
                         // 벡터를 시계방향으로 돌리고 이동
                         headVector = (headVector+1)%4;
-                        gateHead(stage, ny, nx);
+                        gateHead(stage, ny, nx, gm);
                         moveTail(stage);
                     }else if (stage[ny+dy[(headVector+3)%4]][nx+dx[(headVector+3)%4]] == EMPTY){
                         // 반시계가 가능하다면,
                         // 벡터를 반시계방향으로 돌리고 이동
                         headVector = (headVector+3)%4;
-                        gateHead(stage, ny, nx);
+                        gateHead(stage, ny, nx, gm);
                         moveTail(stage);
                     }else{
                         // 남은건 원래 진행방향의 반대방향뿐이다.
                         headVector = (headVector+2)%4;
-                        gateHead(stage, ny, nx);
+                        gateHead(stage, ny, nx, gm);
                         moveTail(stage);
                     }
                 }
@@ -278,6 +279,10 @@ class Snake{
                 life = DEAD;
             }
         }
+        void getCord(){
+            std::cout << "(" << headY << "," << headX << ")";
+        }
+
 
         void changeHeadVector(char key){
             if (key == 'a'){

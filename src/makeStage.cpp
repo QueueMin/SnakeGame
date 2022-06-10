@@ -8,10 +8,9 @@ void makeStage(int stageNum, int stage[][MSIZE]) {
     std::string t = "stage" + s + ".txt";
     std::ifstream inputfile(t);
 
-    if (!inputfile.is_open())
-        std::cout << "Error opening file";
+    // if (!inputfile.is_open())
+    //     std::cout << "Error opening file";
 
-    // std::cout << t << "\n";
     for (int r = 0; r < MSIZE; r++)
     {
         for (int c = 0; c < MSIZE; c++)
@@ -19,18 +18,6 @@ void makeStage(int stageNum, int stage[][MSIZE]) {
             inputfile >> stage[r][c];
         }
     }
-
-
-    // // for debug
-    // for (int r = 0; r < MSIZE; r++)
-    // {
-    //     for (int c = 0; c < MSIZE; c++)
-    //     {
-    //         std::cout << stage[r][c] << "\t";
-    //     }
-    //     std::cout << std::endl;
-    // }
-    // // for debug end
     
 }
 

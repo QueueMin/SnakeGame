@@ -17,3 +17,8 @@
 #define RIGHT 1
 #define DOWN 2
 #define LEFT 3
+
+#define DISABLED -1
+
+#define MOVETICK 2500000
+#define BEFORENEXTSTAGE 5000000

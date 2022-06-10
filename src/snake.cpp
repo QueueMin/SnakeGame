@@ -20,7 +20,12 @@ class Snake{
         // 몸 전체를 저장할 deque bodyDeque
         // 가장 앞에 있는 원소가 snake 객체의 head좌표가 된다.
         std::deque<std::pair<int, int>> bodyDeque;
-    
+
+        int gateScore = 0;
+        int growthScore = 0;
+        int poisonScore = 0;
+        int lenRecordScore = 3;
+
     public:
         // void makeBodyDeque(int stage[][MSIZE]);
         // void findHead(int stage[][MSIZE]);
@@ -91,11 +96,17 @@ class Snake{
         // 독 아이템 섭취 시
         void takePoison(){
             bodyLen--;
+            poisonScore++;
         }
 
         // 성장 아이템 섭취 시
         void takeGrowth(){
             bodyLen++;
+            // 점수들도 갱신
+            growthScore++;
+            if (bodyLen > lenRecordScore){
+                lenRecordScore = bodyLen;
+            }
         }
 
         // 현재 headY, headX, headVector값을 바탕으로,
@@ -121,13 +132,16 @@ class Snake{
             bodyDeque.push_front(std::make_pair(headY, headX));
         }
         
-        void gateHead(int stage[][MSIZE], int ny, int nx, gateManager gm){
+        void gateHead(int stage[][MSIZE], int ny, int nx, gateManager& gm){
             // 뱀이 gate를 탔을 때 head의 위치가 바뀌는 함수
             // 마찬가지로 길이는 손대지 않는다.
             // 도착지 게이트의 위치 ny와 nx를 추가로 받는다.
-            
-            //gateManager 객체의 남은 수명을 뱀의 길이만큼 연장시킨다.
-            gm.setTickAsLen(*this);
+
+            //gateManager 객체의 남은 수명을 뱀의 길이만큼으로 바꾼다.
+            gm.setTick(bodyLen+1);
+
+            //gate 점수 증가
+            gateScore++;
 
             // 원래 머리였던 칸은 몸으로 표시한다.
             stage[headY][headX] = SBODY;
@@ -165,7 +179,7 @@ class Snake{
         // gateB면, gateA를 기반으로 이동한다.  -->  Gate를 기반으로 좌표와 이동방향 지정해주는 함수 필요.
         // 남은 경우는 벽, 자신의 몸 뿐이다.(head가 head와 충돌하는 경우는 없으므로)
         // 벽과 몸이면, life를 DEAD로 바꾼다. 
-        void changeOnNextStep(int stage[][MSIZE], gateManager gm){
+        void changeOnNextStep(int stage[][MSIZE], gateManager& gm){
             int next = collideWith(stage);
             
             if (next == EMPTY){

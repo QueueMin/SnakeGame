@@ -12,6 +12,7 @@
 
 
 int main(){
+    srand(time(NULL));
     initscr();
     resize_term(30, 90);
     
@@ -35,15 +36,20 @@ int main(){
         // 2. 현재 머리의 방향을 기준으로 도착한 다음칸에 도착 시 일어날 변화 반영
         bool flag = false;
         while (!s.isDead()){
+            //input
             sleep(250000);
             key = getch();
-
+            
+            //logics
             s.changeHeadVector(key);
             s.changeOnNextStep(stageLoaded, gm);
+            gm.onNextStep(stageLoaded);
             
+            //display
             move(0,0);
             displayStage(stageLoaded);
         }
+        getch();
         if (flag){
             stageNum++;
             makeStage(stageNum, stageLoaded);
@@ -53,10 +59,6 @@ int main(){
             break;
         }
     }
-
-    
-    getchar();
-    // for check snake move end
     endwin();
     return 0;
 }

@@ -19,6 +19,7 @@
 #define LEFT 3
 
 #define DISABLED -1
+#define GATETICKINIT 24
 
 #define MOVETICK 2500000
 #define BEFORENEXTSTAGE 5000000

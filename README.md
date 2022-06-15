@@ -6,6 +6,24 @@
 #### 20203041 김성호
 #### 20203058 노혜원
 
+### 개발 환경: Ubuntu 20.04.4
+
+### 플레이 방법
+```
+cd src
+./game
+```
+#### 혹은 컴파일 필요 시
+```
+sudo apt-get update
+sudo apt-get install libncurses5-dev libncursesw5-dev
+
+cd src
+g++ -o game main.cpp -l ncurses
+./game
+```
+
+
 ---
 * 구현하고자 하는 UI
 

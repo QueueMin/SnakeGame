@@ -202,7 +202,7 @@ class Snake{
         // gateB면, gateA를 기반으로 이동한다.  -->  Gate를 기반으로 좌표와 이동방향 지정해주는 함수 필요.
         // 남은 경우는 벽, 자신의 몸 뿐이다.(head가 head와 충돌하는 경우는 없으므로)
         // 벽과 몸이면, life를 DEAD로 바꾼다. 
-        void changeOnNextStep(int stage[][MSIZE], gateManager& gm, itemManager& im){
+        void changeOnNextStep(int stage[][MSIZE], gateManager& gm){
             timeScore++;
             int next = collideWith(stage);
             

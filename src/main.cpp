@@ -83,7 +83,7 @@ int main(){
             im.changeOnNextStep(stageLoaded);
 
             s.changeHeadVector(vin);
-            s.changeOnNextStep(stageLoaded, gm, im);
+            s.changeOnNextStep(stageLoaded, gm);
             
             sc.updateAll(s.getGateScore(), s.getGrowthScore(), s.getPoisonScore(), s.getBodyLen(), s.getLenRecordScore(), s.getTimeScore());
 

@@ -260,24 +260,18 @@ class Snake{
                         // 도착지점이 윗 가장자리면, headVector는 아래로
                         headVector = DOWN;
                         // 이후 머리를 gate 이동 시키고, 꼬리를 한칸 움직인다.
-                        gateHead(stage, ny, nx, gm);
-                        moveTail(stage);
                     } else if (ny == MSIZE - 1){
                         // 도착지점이 아래 가장자리면, headVector는 위로
                         headVector = UP;
-                        gateHead(stage, ny, nx, gm);
-                        moveTail(stage);
                     } else if (nx == 0){
                         // 도착지점이 왼쪽 가장자리면, headVector는 오른쪽으로
                         headVector = RIGHT;
-                        gateHead(stage, ny, nx, gm);
-                        moveTail(stage);
                     }else if (nx == MSIZE - 1){
                         // 도착지점이 오른쪽 가장자리면, headVector는 왼쪽으로
                         headVector = LEFT;
-                        gateHead(stage, ny, nx, gm);
-                        moveTail(stage);
                     }
+                    gateHead(stage, ny, nx, gm);
+                    moveTail(stage);
 
                 } else {
                     // gate가 가장자리에 있는게 아니라면,
@@ -285,26 +279,20 @@ class Snake{
                     if (stage[ny+dy[headVector]][nx+dx[headVector]] == EMPTY){
                         // 원래 방향이 가능하다면,
                         // 벡터는 그대로 두고 이동.
-                        gateHead(stage, ny, nx, gm);
-                        moveTail(stage);
                     }else if (stage[ny+dy[(headVector+1)%4]][nx+dx[(headVector+1)%4]] == EMPTY){
                         // 시계방향이 가능하다면,
                         // 벡터를 시계방향으로 돌리고 이동
                         headVector = (headVector+1)%4;
-                        gateHead(stage, ny, nx, gm);
-                        moveTail(stage);
                     }else if (stage[ny+dy[(headVector+3)%4]][nx+dx[(headVector+3)%4]] == EMPTY){
                         // 반시계가 가능하다면,
                         // 벡터를 반시계방향으로 돌리고 이동
                         headVector = (headVector+3)%4;
-                        gateHead(stage, ny, nx, gm);
-                        moveTail(stage);
                     }else{
                         // 남은건 원래 진행방향의 반대방향뿐이다.
                         headVector = (headVector+2)%4;
-                        gateHead(stage, ny, nx, gm);
-                        moveTail(stage);
                     }
+                    gateHead(stage, ny, nx, gm);
+                    moveTail(stage);
                 }
             } else {
                 // 이외의 경우,

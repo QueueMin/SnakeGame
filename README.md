@@ -11,15 +11,20 @@ https://github.com/QueueMin/SnakeGame
 
 ### 플레이 방법
 ```
-cd src
+git clone https://github.com/QueueMin/SnakeGame.git
+cd SnakeGame/src
 ./game
 ```
-#### 혹은 컴파일 필요 시
+##### 실행 후 방향키 혹은 'A', 'S', 'D', 'F' 로 조작
+
+#### 컴파일 필요 시
 ```
 sudo apt-get update
 sudo apt-get install libncurses5-dev libncursesw5-dev
 
-cd src
+git clone https://github.com/QueueMin/SnakeGame.git
+
+cd SnakeGame/src
 g++ -o game main.cpp -l ncurses
 ./game
 ```

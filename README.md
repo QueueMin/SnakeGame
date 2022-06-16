@@ -11,13 +11,31 @@ https://github.com/QueueMin/SnakeGame
 
 ### 플레이 방법
 ```
+실행 후 방향키 혹은 'A', 'S', 'D', 'F' 로 조작
+
+하늘색 -> 뱀의 머리. 조작 시 해당 방향으로 진행방향 변경됨.
+          진행방향과 반대 방향으로 조작 시 GameOver(몸에 부딪히므로)
+파란색 -> 뱀의 몸. 머리와 몸이 부딪힐 시 GameOver.
+하얀색 -> 벽. 충돌 시 Game Over.
+빨간색 -> 성장 아이템. 획득 시 길이가 1칸 늘어남.
+초록색 -> 독 아이템. 획득 시 길이가 1칸 줄어들며 뱀의 길이가 3칸 미만일 시 GameOver.
+자주색 -> Gate. 진입 시 다른 Gate로 튀어나감.
+
+매 Stage의 목표: 오른쪽 아래에 있는 Mission Score를 달성하면 됨.
+총 Stage는 1~4 stage로 구성되어 있으며 GameOver하지 않고 끝까지 클리어 시 성공.
+```
+
+
+
+
+### 설치 방법
+```
 git clone https://github.com/QueueMin/SnakeGame.git
 cd SnakeGame/src
 ./game
 ```
-##### 실행 후 방향키 혹은 'A', 'S', 'D', 'F' 로 조작
 
-#### 컴파일 필요 시
+### 컴파일 필요 시
 ```
 sudo apt-get update
 sudo apt-get install libncurses5-dev libncursesw5-dev
